@@ -77,7 +77,7 @@ template<typename T> class Graph
       //   cout << endl;
       // }
 
-      cout << "All possible combination generation complete" << endl;
+      // cout << "All possible combination generation complete" << endl;
    }
 
 
@@ -114,10 +114,10 @@ template<typename T> class Graph
          }
       }
 
-      for( auto edge : mst){
-         cout << "[ w:" << edge[0] << " a: " << edge[1] << " b: " << edge[2] << " ]" << endl;
-      }
-      cout << "Cost : " << cost << endl; 
+      // for( auto edge : mst){
+      //    cout << "[ w:" << edge[0] << " a: " << edge[1] << " b: " << edge[2] << " ]" << endl;
+      // }
+      // cout << "Cost : " << cost << endl; 
    }
 
 
@@ -160,7 +160,7 @@ template<typename T> class Graph
       kruskal();
       generateCombo(edgegraph);
 
-      cout << "All combo size : " << allcomb.size() << endl;
+      // cout << "All combo size : " << allcomb.size() << endl;
 
       for( auto vv: allcomb)
       {
@@ -180,7 +180,7 @@ template<typename T> class Graph
          if(tempcost==cost && flag2 == 0) allCostComb.push_back(vv);
       }
 
-      cout << "Cost MSt : " << allCostComb.size() << endl;
+      // cout << "Cost MSt : " << allCostComb.size() << endl;
 
       for( auto vv : allCostComb){
          if( cycleDet(vv) == true ){
@@ -188,14 +188,14 @@ template<typename T> class Graph
          }
       }
 
-      for( auto vv: allMstAns)
-      {
-         for(auto v: vv)
-         {
-            cout << "[ w:" << v[0] << " a: " << v[1] << " b: " << v[2] << " ]" << ", "; 
-         }
-         cout << endl;
-      }
+      // for( auto vv: allMstAns)
+      // {
+      //    for(auto v: vv)
+      //    {
+      //       cout << "[ w:" << v[0] << " a: " << v[1] << " b: " << v[2] << " ]" << ", "; 
+      //    }
+      //    cout << endl;
+      // }
    }
 
    //////////////// Function for edge number //////////////
@@ -211,10 +211,10 @@ template<typename T> class Graph
    {
       allMst();
       
-      for( auto edge : edgegraphPr2)
-      {
-        cout << edge[1]+1 << " " << edge[2]+1 << endl;
-      }
+      // for( auto edge : edgegraphPr2)
+      // {
+      //   cout << edge[1]+1 << " " << edge[2]+1 << endl;
+      // }
 
       
       for( auto edge : edgegraphPr2)

@@ -1,4 +1,4 @@
-#include<iostream>
+ #include<iostream>
 #include<vector>
 #include<algorithm>
 
@@ -9,6 +9,7 @@ using namespace std;
 template<typename T> class Graph
 {
    vector<vector<int>> edgegraph;
+   vector<vector<int>> edgegraphPr2;
    int nodecount;
 
    vector<vector<int>> mst;  
@@ -20,7 +21,8 @@ template<typename T> class Graph
    vector<vector<vector<int>>> allCostComb;
    vector<vector<vector<int>>> allMstAns;
 
-
+   vector<int> critEdge;
+   vector<int> psdoEdge;
 
    public:
 
@@ -39,6 +41,7 @@ template<typename T> class Graph
    void addEdge(T w, T a, T b)
    {
       edgegraph.push_back({w,a,b});
+      edgegraphPr2.push_back({w,a,b});
    }
 
    vector<vector<T>> getEdgeList(){
@@ -75,7 +78,7 @@ template<typename T> class Graph
       //   cout << endl;
       // }
 
-      // cout << "All possible combination generation complete" << endl;
+      //cout << "All possible combination generation complete" << endl;
    }
 
 
@@ -112,10 +115,10 @@ template<typename T> class Graph
          }
       }
 
-      // for( auto edge : mst){
-      //    cout << "[ w:" << edge[0] << " a: " << edge[1] << " b: " << edge[2] << " ]" << endl;
-      // }
-      // cout << "Cost : " << cost << endl; 
+    //   for( auto edge : mst){
+    //      cout << "[ w:" << edge[0] << " a: " << edge[1] << " b: " << edge[2] << " ]" << endl;
+    //   }
+    //   cout << "Cost : " << cost << endl; 
    }
 
 
@@ -158,7 +161,7 @@ template<typename T> class Graph
       kruskal();
       generateCombo(edgegraph);
 
-      // cout << "All combo size : " << allcomb.size() << endl;
+    //   cout << "All combo size : " << allcomb.size() << endl;
 
       for( auto vv: allcomb)
       {
@@ -178,31 +181,89 @@ template<typename T> class Graph
          if(tempcost==cost && flag2 == 0) allCostComb.push_back(vv);
       }
 
-      // cout << "Cost MSt : " << allCostComb.size() << endl;
+    //   cout << "Cost MSt : " << allCostComb.size() << endl;
 
       for( auto vv : allCostComb){
          if( cycleDet(vv) == true ){
             allMstAns.push_back(vv);
          }
       }
-        
-        int count  = 1;
-       for( auto vv: allMstAns)
-       {    
-           int brCount = 0;
-           cout << count << " : [";
-          for(auto v: vv)
-          {
-             brCount++;
-             cout << "[" << v[1] << ", " << v[2] << ", " << v[0] << "]"; 
-             if(brCount != vv.size()) cout << ", ";
-             
-          }
-          cout <<"]" << endl;
-          count++;
-       }
+
+    //   for( auto vv: allMstAns)
+    //   {
+    //      for(auto v: vv)
+    //      {
+    //         cout << "[ w:" << v[0] << " a: " << v[1] << " b: " << v[2] << " ]" << ", "; 
+    //      }
+    //      cout << endl;
+    //   }
    }
 
+   //////////////// Function for edge number //////////////
+
+   bool edgeCompare(vector<int> a, vector<int> b)
+   {
+      if( a[0] == b[0] && a[1] == b[1] && a[2] == b[2]) return true;
+      return false;
+   }
+
+
+   void critEdgeFinder()
+   {
+      allMst();
+      
+    //   for( auto edge : edgegraphPr2)
+    //   {
+    //     cout << edge[1]+1 << " " << edge[2]+1 << endl;
+    //   }
+
+      int count = 0;
+      for( auto edge : edgegraphPr2)
+      {
+        
+         //cout <<"[ " << edge[1]+1 << " " << edge[2]+1 << " " << edge[0] << " ]"<< endl;
+         int flag = 0;
+         for(auto vv : allMstAns)
+         {
+            for( auto v : vv)
+            {
+               if( edgeCompare(v,edge) ) {
+                  flag++;
+                  break;
+               }
+            }
+         }
+        // if( flag == allMstAns.size() ) critEdge.push_back(count);
+        // else if( flag != 0 ) psdoEdge.push_back(count);
+
+        if( flag == 0 ){}
+        else if( flag == allMstAns.size() ) critEdge.push_back(count);
+        else psdoEdge.push_back(count);
+
+        count++;
+      }
+
+
+        if( critEdge.size() != 0 ){
+            cout << "Critical edges: [";
+            for( int i = 0; i<critEdge.size(); i++)
+            {
+                cout << critEdge[i];
+                if( i!= critEdge.size()-1 ) cout << ",";
+            }
+            cout << "]" << endl;
+        }
+
+        if( psdoEdge.size() != 0 ){
+                cout << "Pseudo critical edges: [";
+                for( int i = 0; i<psdoEdge.size(); i++)
+                {
+                    cout << psdoEdge[i];
+                    if( i!= psdoEdge.size()-1 ) cout << ",";
+                }
+                cout << "]";
+        }
+   }
 
 };
 
@@ -222,14 +283,10 @@ int main()
       graph.addEdge(w,a,b);
    }
    
-   //graph.print();
-   graph.allMst();
-   //graph.generateCombinations(graph.getEdgeList());
-   //graph.kruskal();
-
+    //graph.print();
+    //graph.allMst();
+   graph.critEdgeFinder();
+  
+   
    return 0;
 }
-
-
-
-
