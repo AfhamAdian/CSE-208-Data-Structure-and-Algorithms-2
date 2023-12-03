@@ -121,9 +121,13 @@ template<typename T> class Graph
 
    ///////// Function for Cycle Detection ///////////
 
-   bool cycleDet( vector<vector<int>> tempGraph)
+   bool cycleDet( vector<vector<int>> tempGraph)            //return false if cycle found
    {
-      sort(tempGraph.begin(),tempGraph.end()); 
+      //sort(tempGraph.begin(),tempGraph.end());
+      for(int i = 0; i<nodecount; i++){
+          parent[i] = -1;
+      }
+      
       for (auto edge : tempGraph)
       {
          int f1 = find(edge[1]);
@@ -131,13 +135,19 @@ template<typename T> class Graph
 
          if( f1 != f2 ){
             mst.push_back(edge);
-            // += edge[0];
-            join(f1,f2);                     // As we should join the roots
+        //cout << " a : " << edge[1] << " b: " << edge[2] << " ,";
+        // += edge[0];
+            join(f1,f2);                                  // As we should join the roots
          }
          else {
             return false;
          }
       }
+        // cout << endl;
+        // for(int i = 0; i<nodecount; i++){
+        //     cout << parent[i] << " ";
+        // }
+        // cout << endl;
       return true;
    }
 
@@ -152,13 +162,20 @@ template<typename T> class Graph
 
       for( auto vv: allcomb)
       {
+         int flag[nodecount] = {0},flag2 = 0;
          if( vv.size() != nodecount-1 ) continue;
          int tempcost = 0;
          for(auto v: vv)
          {
             tempcost += v[0];
+            flag[v[1]]++;
+            flag[v[2]]++;
          }
-         if(tempcost<=cost) allCostComb.push_back(vv);
+         for(int i = 0; i<nodecount; i++)
+         {
+            if(flag[i] == 0) flag2 = 1;
+         }
+         if(tempcost==cost && flag2 == 0) allCostComb.push_back(vv);
       }
 
       cout << "Cost MSt : " << allCostComb.size() << endl;
@@ -169,7 +186,7 @@ template<typename T> class Graph
          }
       }
 
-      for( auto vv: allCostComb)
+      for( auto vv: allMstAns)
       {
          for(auto v: vv)
          {
@@ -177,9 +194,7 @@ template<typename T> class Graph
          }
          cout << endl;
       }
-
    }
-
 
 
 };
@@ -203,7 +218,7 @@ int main()
    graph.print();
    graph.allMst();
    //graph.generateCombinations(graph.getEdgeList());
-   // graph.kruskal();
+   //graph.kruskal();
 
    return 0;
 }
