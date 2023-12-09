@@ -120,7 +120,7 @@ template<typename T> class Graph        // graph T = Wieght datatype
         int dist1 = dist[des];
         int dist2 = INT32_MAX, dist3=INT32_MAX;
 
-        cout << " 1" << endl;
+        //cout << " 1" << endl;
 
         addEdge( extrA, extrB, (T)lower );
     
