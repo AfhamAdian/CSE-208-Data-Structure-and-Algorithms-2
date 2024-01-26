@@ -52,6 +52,28 @@ public:
     }
     ~node();
     int get_nodechild();
+
+    bool isLeftChild()
+    {
+        if (parent->left == this) return true;
+        else false;
+    }
+
+    bool redChildfinder()
+    {
+        if( (left != NULL && left->color == red) ||( right != NULL && right->color == red ) ) return true;
+        else return false;
+    }
+
+    node<T>* getSiblingNode()
+    {
+        if( parent == NULL ) return NULL;
+
+        if( isLeftChild() ){
+            return parent->right;
+        }
+        return parent->left;
+    }
 };
 
  template<typename T> node<T> :: ~node()
@@ -97,4 +119,8 @@ public:
     node<T>* findmin( node<T>* root );
     T findmint(node<T>* root);
 
+    void deleteKey( int n );
+    void deleteNode ( node<T>* &v);
+    node<T>* replacedNode( node<T>* &x );
+    void fixDB (node<T>* &x );
 };

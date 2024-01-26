@@ -7,15 +7,30 @@ int main()
  
 
 
+  //  a.insert(10,"Thors");
+  //  a.insert(34,"Canute");
+  //  a.insert(43,"Olaf");
+  //  a.insert(15,"Einer");
+  // //  a.insert(40,"Olmar");
+  // //  a.insert(53,"Floki");
+  // //  a.insert(90,"Thorfinn");
+  // //  a.insert(12,"Snake");
+  // //  a.insert(78,"Askeladd");
+
+
    a.insert(10,"Thors");
    a.insert(34,"Canute");
    a.insert(43,"Olaf");
-   a.insert(15,"Einer");
-   a.insert(40,"Olmar");
-   a.insert(53,"Floki");
-   a.insert(90,"Thorfinn");
-   a.insert(12,"Snake");
-   a.insert(78,"Askeladd");
+   a.insert(45,"Einer");
+  //  a.insert(40,"Olmar");
+  //  a.insert(53,"Floki");
+  //  a.insert(90,"Thorfinn");
+  //  a.insert(12,"Snake");
+  //  a.insert(78,"Askeladd");
+
+   a.deleteKey(43);
+   //a.deleteKey(78);
+
   //  a.insert(15,"Ymir");  
 
 
