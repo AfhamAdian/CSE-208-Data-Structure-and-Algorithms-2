@@ -254,31 +254,80 @@ template<typename T> T BST<T> :: findmint(node<T>* root)
 
 
 
-//// NEW FUNCTIONS of REDBLACK TREE
 
 
+
+/////////////////////////////////// NEW FUNCTIONS of REDBLACK TREE ///////////////////
+
+
+template<typename T> bool BST<T> :: isEmpty()
+{
+    return totalnode == 0;
+}
+
+template<typename T> int BST<T> :: size()
+{
+    return totalnode;
+}
+
+template<typename T> bool BST<T> :: clear()
+{
+    if( totalnode == 0 ) return false;
+
+    while( totalnode ){
+        deleteNode(mainroot);
+    }
+    
+    return true;
+}
+
+
+template <typename T> void BST<T>::inorderNew()
+{
+    inorderNew(mainroot);
+}
+
+template <typename T> void BST<T>::inorderNew(node<T> *&root)
+{
+    if (root == NULL)
+        return;
+    inorderNew(root->left);
+    if( root->color == red ) {
+        cout <<  dye :: light_red(root->key);
+        cout << " -> " << dye :: light_red(root->value ) << endl;
+    }
+    else {
+        cout <<  root->key;
+        cout << " -> " << root->value << endl;
+    }
+    
+    inorderNew(root->right);
+}
 
 // rotate functions
 
 // root er right child ke new root dhore notun tree banabe, then oi tree er root return korbe
 
-template<typename T> node<T>* BST<T> :: rotateLeft( node<T>* &root )
+template<typename T> node<T>* BST<T> :: rotateLeft( node<T>* root )
 {
-    // cout << "rotate left e dhukse" << endl;
+    // cout << "rotate left e dhukse,key : " << root->key  << endl;
 
+    node<T>* temp = root;
     node<T>* x = root->right;
     node<T>* y = x->left;
 
-    // cout << "1" << endl;
-    // if( x == NULL ) cout << "x null bhai" << endl;
-
     x->left = root;
-    root->parent = x;
-    // cout << " 2" << endl;
-
     root->right = y;
+
+    root->parent = x;
+
     if( y != NULL  )
         y->parent = root;
+
+    if( temp == mainroot ){ 
+        mainroot = x;
+        mainroot->parent = NULL;
+    }
 
     // cout << "rotateLeft shesh hoise" << endl;
     return x;
@@ -286,22 +335,105 @@ template<typename T> node<T>* BST<T> :: rotateLeft( node<T>* &root )
 
 // node er left child ke root dhore tree banay, tar root return korbe
 
-template<typename T> node<T>* BST<T> :: rotateRight( node<T>* &root )
+template<typename T> node<T>* BST<T> :: rotateRight( node<T>* root )
 {
+    node<T>* temp = root;
     node<T>* x = root->left;
     node<T>* y = x->right;
 
     x->right = root;
+    root->left = y;
+
     root->parent = x;
 
-    root->left = y;
-    if( y!= NULL )
+    if( y != NULL )
         y->parent = root;
 
-    //
-    cout << "rotateRight shesh hoise" << endl;
+    if( temp == mainroot ){
+         mainroot = x;
+         mainroot->parent = NULL;
+    }
+    
+    // cout << "rotateRight shesh hoise " << root->key << endl;
+
     return x;
 }
+
+
+
+
+//// rotate new
+
+template<typename T> void BST<T> :: rotateRight2(node<T>* &x) {
+
+    node<T>* parent = x->parent;
+    node<T>* newRoot = x->left;
+
+    if( x == NULL ) {
+        cout << "NO Right Child. Left rotation cannot be done" << endl;
+        return;
+    }
+
+    node<T>* newLeft = x->left->right;
+
+    if( parent != NULL )
+    {
+        if(x->isLeftChild())  
+            parent->left = newRoot;
+        else 
+            parent->right = newRoot;
+
+        newRoot->parent = parent;
+    }
+    else {
+        newRoot->parent = NULL;
+        mainroot = newRoot;
+    }
+
+    newRoot->right = x;
+    x->parent = newRoot;
+
+    x->left = newLeft;
+    if( newLeft != NULL )   newLeft->parent = x;
+  }
+
+
+
+template<typename T> void BST<T> :: rotateLeft2(node<T>* &x) {
+
+    node<T>* parent = x->parent;
+    node<T>* newRoot = x->right;
+
+    if( x == NULL ) {
+        cout << "NO Left Child. Right rotation cannot be done" << endl;
+        return;
+    }
+
+    node<T>* newLeft = x->right->left;
+
+    if( parent != NULL )
+    {
+        if(x->isLeftChild())  
+            parent->left = newRoot;
+        else 
+            parent->right = newRoot;
+
+        newRoot->parent = parent;
+    }
+    else {
+        newRoot->parent = NULL;
+        mainroot = newRoot;
+    }
+
+    newRoot->left = x;
+    x->parent = newRoot;
+
+    x->right = newLeft;
+    if( newLeft != NULL )   newLeft->parent = x;
+  }
+
+///////////////////////////////////////////
+
 
 
 /// insertion in red black tree
@@ -337,7 +469,12 @@ node<T>* BST<T>::inserthelp(node<T>* &root, T key, string str)
         return root;
     }
 
-    if (key >= root->key )
+    if( key == root->key )
+    {
+        root->value = str;
+        root->output = to_string(key) + "_" + str;
+    }
+    else if (key > root->key )
     {
         root->right = inserthelp(root->right, key, str);
         root->right->parent = root;
@@ -347,7 +484,7 @@ node<T>* BST<T>::inserthelp(node<T>* &root, T key, string str)
             if( root->color == red && root->right->color == red ){
                 redConflict = true;
                 // cout << endl;
-                // cout << ":right ::::: " << root->key << " -> " << root->right->key << endl;
+                // cout << "right ::::: " << root->key << " -> " << root->right->key << endl;
             }
         }
     }
@@ -365,7 +502,8 @@ node<T>* BST<T>::inserthelp(node<T>* &root, T key, string str)
             }
         }
     }
-    // performing rotations when the recusioin is unfolding
+
+    //rotations perform korchi jokhon recusioin is unfolding
 
     if( ll )
     {
@@ -436,27 +574,30 @@ node<T>* BST<T>::inserthelp(node<T>* &root, T key, string str)
                 if( root->parent != mainroot )
                     root->parent->color = red;
             }  
+            redConflict = false;
+            return root;
+        }
+
+        // root jodi parent er left e thake
+
+        if( root->parent->right == NULL || root->parent->right->color == black )
+        {
+            //cout << "right uncle black " << endl;
+            if( root ->right != NULL &&  root->right->color == red )
+                lr = true;
+            else if ( root->left != NULL && root->left->color == red)
+                rr = true;             // duitai left e thkle root er right rotation
         }
         else 
         {
-            if( root->parent->right == NULL || root->parent->right->color == black )
-            {
-                //cout << "right uncle black " << endl;
-                if( root ->right != NULL &&  root->right->color == red )
-                    lr = true;
-                else if ( root->left != NULL && root->left->color == red)
-                    rr = true;             // duitai left e thkle root er right rotation
-            }
-            else 
-            {
-                //cout << "left root coloring" << endl;
-                root->parent->right->color = black;
-                root->color = black;
+            //cout << "left root coloring" << endl;
+            root->parent->right->color = black;
+            root->color = black;
 
-                if( root->parent != mainroot )
-                    root->parent->color = red;
-            }
+            if( root->parent != mainroot )
+                root->parent->color = red;
         }
+
         redConflict = false;
     }
     return root;
@@ -465,17 +606,22 @@ node<T>* BST<T>::inserthelp(node<T>* &root, T key, string str)
 
 
 
-//// bismillah deletioinshuru friday 11.03 e /////
+//// bismillah deletioin shuru friday 11.03 e /////
 
 
 template <typename T> node<T>* BST<T> :: replacedNode( node<T>* &x )
 {
-    if( x->left != NULL && x->right != NULL ){          // node er 2 ta child e thakle
-        return findmin( x->right );
-    }
+    bool check = false;                                 // aj
 
     if( x->left == NULL && x->right == NULL ){          // x leaf hole
         return NULL;
+    }
+
+    check = true;
+    // cout << check << endl;
+
+    if( x->left != NULL && x->right != NULL ){          // node er 2 ta child e thakle
+        return findmin( x->right );
     }
 
     if( x->left != NULL ) return x->left;
@@ -485,17 +631,24 @@ template <typename T> node<T>* BST<T> :: replacedNode( node<T>* &x )
 
 template <typename T> void BST<T> :: fixDB ( node<T>* &x )
 {
-    if( x == mainroot ) return;
+    if( x == mainroot ){ 
+        return;
+    }
 
     node<T>* sibling = x->getSiblingNode();
     node<T>* parentX = x->parent;
+
+    // cout << parentX << endl;
+    // cout << parentX->right << " rl " << parentX->left << endl;
+    // cout << "s   " << sibling <<endl;
+    // return;
 
     if( sibling == NULL ) {              // kono sibling nai,s o db parent e push kore fix kora lgbe
         fixDB( parentX );
         return;
     }
     
-    // sibling thakle:
+    // sibling thakle :
 
     if( sibling->color == red )          // sibling red hole, CASE 4
     {
@@ -503,9 +656,9 @@ template <typename T> void BST<T> :: fixDB ( node<T>* &x )
         sibling->color = black;
 
         if( sibling->isLeftChild() ){    // DB er dike rotation
-            rotateRight( parentX );     
+            rotateRight2( parentX );     
         } else{
-            rotateLeft( parentX );
+            rotateLeft2( parentX );
         } 
 
         fixDB( x );                      // DB thakle, reapply other cases
@@ -516,40 +669,51 @@ template <typename T> void BST<T> :: fixDB ( node<T>* &x )
 
     if( sibling->redChildfinder() )
     {
+        // cout << " sibling black and has one red child " <<endl;
         if( sibling->left != NULL && sibling->left->color == red )
         {
             if( sibling->isLeftChild() ){                   // CASE 6 : sibling black, far child red 
-
+                
+                // cout << "Left Left CASE 6 " << x->key << endl;
                 sibling->left->color = sibling-> color;     // sibling must be black as child is red, so ekhane red child ke black banacchi
                 sibling->color = parentX->color;            // parent & sibling er color swap
                 //parentX->color = black;
 
-                rotateRight( parentX );                     // DB er dike rotation
+                rotateRight2( parentX );                     // DB er dike rotation
             }   
             else                                            // right-left config
             {                                               // case 5 -> case 6
+                // cout << "right-left1 CASE 5 " << x->key << endl;
                 sibling->left->color = parentX->color;       
 
-                rotateRight( sibling );
-                rotateLeft( parentX );
-            }                                    
+                //sibling->parent->right = rotateRight( sibling );
+                rotateRight2( sibling );
+                rotateLeft2( parentX );
+            } 
+            parentX->color = black;
+            return;          
         }
-        else
-        {
-            if( sibling->isLeftChild() ){                   // right-left config
+     
+        // sibling er right child red hole
+
+        if( sibling->isLeftChild() ){                   // right-left config
                                                             // case 5 -> case 6
-                sibling->right->color = parentX->color;
-                rotateLeft( sibling );
-                rotateRight( parentX );
-            }
-            else{                                           // right-right config
-                                                            // case 6
-                sibling->right->color = sibling->color;     
-                sibling->color = parentX->color;
-                rotateRight( parentX );
-            }
+            
+            // cout << "right-left2 CASE 5 " << x->key << endl;
+            sibling->right->color = parentX->color;
+            rotateLeft2( sibling );
+            rotateRight2( parentX );
+        }
+        else{                                           // right-right config
+                                                        // case 6
+            // cout << "right-right CASE 6 " << x->key << endl;
+            sibling->right->color = sibling->color;     
+            sibling->color = parentX->color;
+            rotateLeft2( parentX );
         }
         parentX->color = black;
+        return;
+
     }
     else
     {
@@ -566,9 +730,16 @@ template <typename T> void BST<T> :: fixDB ( node<T>* &x )
 }
 
 
-template <typename T> void BST<T> :: deleteNode( node<T>* &v)
+template <typename T> void BST<T> :: deleteNode( node<T>* v )
 {
     node<T>* u = replacedNode( v );
+
+    // cout << "Node to be deleted V : " ;
+    // if( v != NULL ) cout << v->key << " ";
+    // else cout << " null ";
+
+    // if( u!= NULL ) cout << "u : " << u->key << " " << endl;
+    // else cout << " u : null " << endl;
 
     node<T>* parent = v->parent;
     bool DB;
@@ -586,10 +757,12 @@ template <typename T> void BST<T> :: deleteNode( node<T>* &v)
         if( v == mainroot ){
             mainroot = NULL;
             delete v;
+            totalnode--;
             return;
         }
 
         if ( DB == true ) {                   // v te null add korle v te DB hobe
+            // cout << "catch 12 : fixDB running  " << v->key << endl;
             fixDB( v );
         }
         else {
@@ -600,33 +773,59 @@ template <typename T> void BST<T> :: deleteNode( node<T>* &v)
         if ( v->isLeftChild() ) parent->left = NULL;
         else parent->right = NULL;
 
+        totalnode--;
         delete v;
         return;
     }
 
-    if( v->left == NULL || v->right == NULL ){              // jenoko 1 ta child null 
+    // cout << "v in deletenode 2 " << v->key << endl;
+
+    if( (v->left == NULL) || (v->right == NULL) ){              // jenoko 1 ta child null 
+        
+        //output();
+        //cout << endl;
+        //cout << mainroot->key << " " << mainroot->left << " " << mainroot->right << endl;
+        //cout << v->key <<" " << v->left << "  " << v->right << endl;
+        // cout << "one child in deletenode " << endl;
         
         if( v == mainroot ){                                // red_black tree er Condition er jnno mainroot er ek side e child thakle,1 tar beshi child tahkte parbe na
-            v->key = u->key;
-            v->value = u->value;
-            v->output = u->output;
+           
+            mainroot = u;
+            u->key = v->key;
+            u->value = v->value;
+            u->output = v->output;
 
-            v->left = v->right = NULL;
-            delete u;
+            u->right = u->left = NULL;
+            
+            totalnode--;
+            delete v;
             return;
         }
 
-        if( v->isLeftChild() )
-            parent->left = u;
-        else 
-            parent->right = u;
+        // cout << "deleting v in 21: " << v->key << endl;
+        // cout << "parent p: " << parent->key<< endl;
+        // cout << "u : " << u->key << endl;
+        // cout << "parent right : " << parent->right->key << endl;
+        // cout << endl;
 
-        cout << "deleting v in 21: " << v->key << endl;
-        cout << "parent p: " << parent->key<< endl;
-        cout << "u : " << u->key << endl;
+        if( v->isLeftChild() == true ){
+            parent->left = u;
+            // cout << "left " <<endl;
+        }
+        else{
+            parent->right = u;
+            // cout << "right " <<endl;
+        }
+
+        // cout << "deleting v in 21: " << v->key << endl;
+        // cout << "parent p: " << parent->key<< endl;
+        // cout << "u : " << u->key << endl;
+        // cout << "parent right : " << parent->right->key << endl;
+
+        totalnode--;
         delete v;
-        u->parent = u;
-        
+        u->parent = parent;
+         
         if( DB == true ){
             fixDB( u );                                  // normally u+v er color u te push kori, ekhane u,v duitai e black hawai u te DB push hobe
         } else {
@@ -636,19 +835,16 @@ template <typename T> void BST<T> :: deleteNode( node<T>* &v)
     }
 
     /// now V has 2 children, we can not delete it, swap value with successor and find a node that we can delete
-
     // swapping u and v values
-    bool temp = v->color;
-    string tempStr = v->value;
-    string tempOutput = v->output;
-    int tempKey = v->key;
+
+    string tempStr = u->value;
+    string tempOutput = u->output;
+    int tempKey = u->key;
     
-    u->color = v->color;
     u->key = v->key;
     u->value = v->value;
     u->output = v->output;
 
-    v->color = temp;
     v->key = tempKey;
     v->value = tempStr;
     v->output = tempOutput;
@@ -660,17 +856,22 @@ template <typename T> void BST<T> :: deleteNode( node<T>* &v)
 
 template <typename T> void BST<T> :: deleteKey( int n )
 {
-    if( mainroot == NULL )
-        return;
-    
+    // cout << n << " key is to be delted\n " << endl;
     node<T>* v = find(n);
-    node<T>* u;
-
-    if( v == NULL ){
-        cout << "no such key found " << endl;
+        if( v == NULL ){
+        cout << n << " not found " << endl;
         return;
     }
 
-    deleteNode(v); 
+    if( mainroot == NULL )
+        return;
+    
+    //<T>* v = find(n);
+    node<T>* u;
 
+    if( v == NULL ){
+        cout << n << " not found " << endl;
+        return;
+    }
+    deleteNode(v); 
 }

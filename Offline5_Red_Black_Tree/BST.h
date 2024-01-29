@@ -55,14 +55,12 @@ public:
 
     bool isLeftChild()
     {
-        if (parent->left == this) return true;
-        else false;
+        return this == parent->left;
     }
 
     bool redChildfinder()
     {
-        if( (left != NULL && left->color == red) ||( right != NULL && right->color == red ) ) return true;
-        else return false;
+        return (left != NULL and left->color == red )  || (right != NULL and right->color == red);
     }
 
     node<T>* getSiblingNode()
@@ -99,9 +97,6 @@ public:
     BST();
     ~BST();
 
-    node<T>* rotateLeft ( node<T>* &node );
-    node<T>* rotateRight ( node<T>* &node );
-
     void insert(T key, string str);
     node<T>* inserthelp(node<T> *&root, T key, string str);
     void output();
@@ -119,8 +114,21 @@ public:
     node<T>* findmin( node<T>* root );
     T findmint(node<T>* root);
 
+
+
+    node<T>* rotateLeft ( node<T>* node );
+    node<T>* rotateRight ( node<T>* node );
+
+    void inorderNew();
+    void inorderNew(node<T> *&root);
+    bool clear();
+    bool isEmpty();
+    int size();
     void deleteKey( int n );
-    void deleteNode ( node<T>* &v);
+    void deleteNode ( node<T>* v);
     node<T>* replacedNode( node<T>* &x );
     void fixDB (node<T>* &x );
+
+    void rotateLeft2(node<T>* &x);
+    void rotateRight2(node<T>* &x); 
 };

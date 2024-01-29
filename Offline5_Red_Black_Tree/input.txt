@@ -1,18 +1,27 @@
-F 1
-I 8
-I 10
-I 3
-I 1
-I 14
-I 6
-I 4
-I 13
-I 7
-T In
-T Pre
-T Post
-D 8
-D 7
-D 10
-D 10
-F 4
+Clr
+Em
+I 10 Thors
+I 34 Canute
+I 43 Olaf 
+I 15 Einer
+I 40 Olmar
+F 45
+I 53 Floki
+S
+I 90 Thorfinn
+I 12 Snake
+I 78 Askeladd
+F 40
+E 40
+F 40
+E 78
+S
+E 12
+E 43
+Em
+E 56
+I 15 Ymir
+Itr
+Clr
+S
+E 90

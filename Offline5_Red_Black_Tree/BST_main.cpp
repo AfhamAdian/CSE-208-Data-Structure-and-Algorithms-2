@@ -1,127 +1,154 @@
-#include"BST.cpp"
+// #include"BST.cpp"
+#include"test.cpp"
 
 int main()
 {
-     BST<int> a;
+   BST<int> a;
 
  
 
 
-  //  a.insert(10,"Thors");
-  //  a.insert(34,"Canute");
-  //  a.insert(43,"Olaf");
-  //  a.insert(15,"Einer");
-  // //  a.insert(40,"Olmar");
-  // //  a.insert(53,"Floki");
-  // //  a.insert(90,"Thorfinn");
-  // //  a.insert(12,"Snake");
-  // //  a.insert(78,"Askeladd");
+//    a.insert(10,"Thors");
+//    a.insert(34,"Canute");
+//    a.insert(43,"Olaf");
+//    a.insert(15,"Einer");
+//    a.insert(40,"Olmar");
+//    a.insert(53,"Floki");
+
+//     cout << a.size() << endl;
+
+//    a.insert(90,"Thorfinn");
+
+//    cout << a.clear() << endl;
+
+//    a.insert(12,"Snake");
+//    a.insert(78,"Askeladd");
 
 
-   a.insert(10,"Thors");
-   a.insert(34,"Canute");
-   a.insert(43,"Olaf");
-   a.insert(45,"Einer");
-  //  a.insert(40,"Olmar");
-  //  a.insert(53,"Floki");
-  //  a.insert(90,"Thorfinn");
-  //  a.insert(12,"Snake");
-  //  a.insert(78,"Askeladd");
+//    a.insert(10,"Thors");
+//    a.insert(34,"Canute");
+//    a.insert(43,"Olaf");
+//    a.insert(45,"Einer");
+//    a.insert(15,"Olmar");
+//    a.insert(53,"Floki");
+//    a.insert(90,"Thorfinn");
+//    a.insert(12,"Snake");
+//    a.insert(78,"Askeladd");
+//   cout << "output before deleting " << endl;
+//   a.output();
+//   cout << endl;
+//   a.insert(15,"Ymir");  
 
-   a.deleteKey(43);
-   //a.deleteKey(78);
+//   a.deleteKey(40);
+//   a.deleteKey(78);
+//   a.deleteKey(12);
+//   a.deleteKey(43);
 
-  //  a.insert(15,"Ymir");  
+// //   a.dele
+// //   a.deletekey()
 
-
-
-
-// I 90 Thorfinn
-// I 12 Snake
-// I 78 Askeladd
-// I 53 Floki
-// I 15 Ymir
-
-
+// //   a.deleteKey();
 
 
-//  a.insert(10,"a");
-// a.insert(8,"1");
-//    a.insert(12,"2");
-//    a.insert(9,"3");
-//    a.insert(11,"4");
+//   cout << a.isEmpty() << endl;
+//   cout << a.clear() <<endl;
+//   cout << a.isEmpty() << endl;
+
+//    a.insert(53,"Floki");
+//    a.insert(90,"Thorfinn");
+//    a.insert(12,"Snake");
+//    a.insert(78,"Askeladd")
+
 //    a.output();
-// //    a.find(12);
-// //    a.inorder();
-// //    a.Delete(8);
-   a.output();
 
+    int i = 1;
+     FILE* fp1 = freopen("input.txt", "r", stdin);
+     if (fp1 == NULL)
+     {
+         cout << "input file couldn't be opened" << endl;
+         return 1; // Exit the program with an error code
+     }
 
-//     //  FILE* fp1 = freopen("input.txt", "r", stdin);
-//     //  if (fp1 == NULL)
-//     //  {
-//     //      cout << "input file couldn't be opened" << endl;
-//     //      return 1; // Exit the program with an error code
-//     //  }
+     FILE* fp2 = freopen("output.txt", "w", stdout);
+     if (fp2 == NULL)
+     {
+         cout << "output file couldn't be opened" << endl;
+         return 1; // Exit the program with an error code
+     }
 
-//     //  FILE* fp2 = freopen("output.txt", "w", stdout);
-//     //  if (fp2 == NULL)
-//     //  {
-//     //      cout << "output file couldn't be opened" << endl;
-//     //      return 1; // Exit the program with an error code
-//     //  }
+     while ( !feof(fp1) )
+     {
+         char check[5];
+         int num;
+         
+         scanf(" %s", &check); // Skip any leading whitespace (including newline)
 
-//      while (1)
-//      {
-//          char check;
-//          int num;
-//          string str;
-//          scanf(" %c", &check); // Skip any leading whitespace (including newline)
+        if( strcmp(check,"I") == 0 ){
+            char str[100];
+            scanf("%d", &num);
+            scanf("%s", str);
+            cout << "\nCmd " << i << ": " << check[0] << " " << num << " " << str << endl;
+            i++;
+            a.insert( num, str );
+            a.output();
+            cout << endl;
+            // cout << a.size() << endl;
+        }
+        else if(strcmp(check,"E") == 0 )
+        {
+            scanf("%d", &num);
+            cout << "\nCmd " << i << ": " << check[0] << " " << num << endl;
+            i++;
+            node<int>* test = a.find( num );
+            a.deleteKey( num );
+            if( test != NULL) a.output();
+            cout << endl;
+        }
+        else if(strcmp(check,"Clr") == 0 )
+        {
+            cout << "\nCmd " << i << ": " << check[0] << check[1] << check[2] << endl;
+            i++;
+            if( a.clear() ) cout << "successful" << endl;
+            else  cout << "unsuccessful" << endl;
+            // cout << a.clear() << endl;
+        }
+        else if(strcmp(check,"F") == 0 )
+        {
+            scanf("%d", &num);
+            cout << "\nCmd " << i << ": " << check[0] << " " << num << endl;
+            i++;
+            node<int>* test = a.find( num );
 
-//          switch (check)
-//          {
-//          case 'I':
-//              scanf("%d", &num);
-//              cin >> str;
-//              a.insert( num, str );
-//              //a.output();
-//              cout <<"insertion done"<< endl;
-//              break;
+            if( test == NULL ) cout << num << " " << "not found" << endl;
+            else cout << num << " " << "found" << endl;
 
-//          case 'D':
-//              scanf("%d", &num);
-//              a.Delete(num);
-//              a.output();
-//              cout << endl;
-//              break;
-
-//          case 'T':
-//              cin >> str;
-//              if (str == "In")
-//              {
-//                  a.inorder();
-//                  cout << endl;
-//              }
-//              else if (str == "Pre")
-//              {
-//                  a.preorder();
-//                  cout << endl;
-//              }
-//              else if (str == "Post")
-//              {
-//                  a.postorder();
-//                  cout << endl;
-//              }
-//              break;
-
-//          case 'F':
-//              scanf("%d", &num);
-//              a.find(num);
-//              break;
-
-//          default:
-//              break;
-//          }
-//      }
-//     return 0;
+            // a.output();
+            // cout << endl;
+        }
+        else if(strcmp(check,"Em") == 0 )
+        {
+            cout << "\nCmd " << i << ": " << check[0] << check[1] << endl;
+            i++;
+            if( a.isEmpty() ) cout << "yes" << endl;
+            else  cout << "no" << endl;
+        }
+        else if(strcmp(check,"S") == 0 )
+        {
+            cout << "\nCmd " << i << ": " << check[0] << endl;
+            i++;
+            // cout << check << endl;
+           cout << a.size() << endl;
+        }
+        else if ( strcmp( check,"Itr") == 0)
+        {
+            cout << "\nCmd " << i << ": " << check[0] << check[1] << check[2] << endl;
+            i++;
+            a.inorderNew();
+        }
+        else{
+            cout << "input error" << endl;
+            //a.inorderNew();
+        }
+    }
+    return 0;
 }
