@@ -22,7 +22,7 @@ class node
         node<T> *child;
         node<T> *left;
         node<T> *right;
-
+    
     node( int key, T value)
     {
         this->key = key;
@@ -36,7 +36,10 @@ class node
 
 
 
-/// fibonacci class begins here
+
+
+
+/// fibonacci class begisn here
 
 template <typename T> 
 class fibonacci
@@ -45,12 +48,7 @@ class fibonacci
     vector<node<T> *> root_list;
     int totalnode;
 
-
-
     public :
-
-    node<T>* test;
-    node<T>* test2;
 
     fibonacci(){
         max = nullptr;
@@ -58,36 +56,20 @@ class fibonacci
     }
 
 
+    // INSERT 
+
     void insert( int key, T value );
     int extractMax();
     void consolidate();
-    void increaseKey( node<T>* &nodeToIncrease, int newKey );
-    void increaseKeyHelper( node<T>* &nodeToIncrease, int newKey );
-    void meld( fibonacci<T> &heapToMeld );
-    void deleteNode( node<T>* &nodeToDelete );
     void printHeap();
     void printHeapHelper( node<T> * &rootToPrint );
-    
-    void parentCut( node<T>* &nodeToCut );
-    void cut( node<T>* &nodeToCut);
+
     void join ( node<T>* &newRoot , node<T>* &child );
     void swap ( node<T>* &a, node<T>* &b );
-    node<T> * findNode( int key );
-    node<T> * findNodeHelper( node<T> * &root, int key );
-
-
     void removeINTMAX();
     void printRootList();
-    node<T>*& getmax();
 
 };
-
-
-template<typename T>
-node<T>*& fibonacci<T> :: getmax()
-{
-    return max;
-}
 
 template<typename T>
 void fibonacci<T> :: swap( node<T>* &a, node<T>* &b )
@@ -110,52 +92,6 @@ void fibonacci<T> :: removeINTMAX()
 }
 
 template<typename T>
-node<T> * fibonacci<T> :: findNode( int key )
-{   
-    node<T> * ans = nullptr;  
-    for( auto tempNode : root_list)
-    {
-        if( tempNode->key == key){
-            return tempNode;
-        }
-        ans = findNodeHelper( tempNode, key );
-
-        if( ans != nullptr ) return ans;
-    }
-
-    if( ans == nullptr ){
-         cout << "node not found" << endl;
-        return nullptr;
-    }
-}
-
-template<typename T>
-node<T> * fibonacci<T> :: findNodeHelper( node<T> * &startFindNode , int key )
-{
-    if( startFindNode == nullptr ) return nullptr;
-
-    if( firstChild->key == key ){
-        return firstChild;
-    }
-
-    if( startFindNode->child == nullptr ) return nullptr;
-    
-    node<T> * firstChild = startFindNode->child;
-    node<T> * lastChild = firstChild->right;
-
-    node<T> * ans = nullptr;
-    do 
-    {
-
-        ans = findNodeHelper( firstChild, key );
-        if( ans != nullptr ) return ans;
-        firstChild = firstChild->left;
-    }
-    while ( firstChild != lastChild );
-
-}
-
-template<typename T>
 void fibonacci<T> :: printHeap()
 {
     if( totalnode == 0 )
@@ -171,28 +107,18 @@ void fibonacci<T> :: printHeap()
 
     for( int i = 0; i<root_list.size(); i++ )
     {
-        cout << "Tree " << i+1 << " : " ;
+        cout << "Tree " << i << " : " ;
         printHeapHelper(root_list[i]);
     }
-    cout << endl;
 }
 
 template<typename T>
 void fibonacci<T> :: printHeapHelper( node<T> * &rootToPrint)
 {
-    if( rootToPrint != nullptr && rootToPrint->key == 5) test = rootToPrint; 
-    if( rootToPrint != nullptr && rootToPrint->key == 6) test2 = rootToPrint; 
-
     node<T> * tempNode = rootToPrint->child;
         vector<node<T> *> tempChildList;
 
-        // if( tempNode != nullptr && tempNode->key ==  8 ) test = tempNode; 
-        //cout << rootToPrint->key << endl;
-
-        // if( rootToPrint->key == 5 ){
-        //     cout << tempNode->key << " " << tempNode->left->key << endl;
-        // }
-        cout << "(" << rootToPrint->key << ", " << rootToPrint->value << ")";
+        cout << "(" << rootToPrint->key << ", " << rootToPrint->value << ") ";
         
         if( tempNode == nullptr )
         {
@@ -216,9 +142,8 @@ void fibonacci<T> :: printHeapHelper( node<T> * &rootToPrint)
         {
             if( tempChildNode->child != nullptr)
             {
-                //cout << "         " <<  tempChildNode->rank << " (" << tempChildNode->key << ", " << tempChildNode->value << ")->"; 
-                cout << "         ";
-                printHeapHelper(tempChildNode);
+                cout << "         (" << tempChildNode->key << ", " << tempChildNode->value << ") ->"; 
+                printHeapHelper(tempChildNode->child);
             }
         }
 }
@@ -327,7 +252,7 @@ int fibonacci<T> :: extractMax()
 
         delete max;
 
-        // cout << "consolidating in max == nullptr" << endl;
+        cout << "consolidating in max == nullptr" << endl;
         consolidate();
 
         return temp;
@@ -336,7 +261,7 @@ int fibonacci<T> :: extractMax()
     node<T> * firstChild = maxChild;
     node<T> * lastChild = maxChild->right;
 
-    // cout << "bugged here" << endl;
+    cout << "bugged here" << endl;
     do
     {
         firstChild->parent = nullptr;
@@ -393,7 +318,7 @@ void fibonacci<T> :: consolidate()
     {
         node<T> * tempRoot = root_list[i];
         
-        // cout << i << " th consolidating root : " << tempRoot->key << endl;
+        cout << i << " th consolidating root : " << tempRoot->key << endl;
         // printRootList();
 
         node<T> * tempNode = tempRoot;
@@ -415,7 +340,7 @@ void fibonacci<T> :: consolidate()
                 swap( tempNode, tempPoint );
             }
 
-            //cout << "joining " << tempNode->key << " and " << tempPoint->key << endl;
+            cout << "joining " << tempNode->key << " and " << tempPoint->key << endl;
             join( tempNode, tempPoint );
 
             rankList[tempRank] = nullptr;
@@ -457,21 +382,21 @@ void fibonacci<T> :: consolidate()
 template<typename T>
 void fibonacci<T> :: join( node<T>* &newRoot, node<T>* &childNode )
 {
-    // cout << "in join " << newRoot->key << " and " << childNode->key << endl; 
+    cout << "in join " << newRoot->key << " and " << childNode->key << endl; 
     // removing childNode from root list
-    // for( int i = 0; i<root_list.size(); i++ )
-    // {
-    //     if( root_list[i]->key == childNode->key )
-    //     {
-    //         // cout << "removing " << childNode->key << " from root list" << endl;
-    //         // cout << (*(root_list.begin() + i))->key << endl;
-    //         //root_list.erase(root_list.begin() + i);
-    //         // cout << "printing after easrse" << endl;
-    //         // printRootList();
-    //         root_list[i]->key = INT16_MAX;
-    //         break;
-    //     }
-    // }
+    for( int i = 0; i<root_list.size(); i++ )
+    {
+        if( root_list[i]->key == childNode->key )
+        {
+            // cout << "removing " << childNode->key << " from root list" << endl;
+            // cout << (*(root_list.begin() + i))->key << endl;
+            //root_list.erase(root_list.begin() + i);
+            // cout << "printing after easrse" << endl;
+            // printRootList();
+            root_list[i]->key = INT16_MAX;
+            break;
+        }
+    }
 
     // making childNode a children of NewRoot
     // last child is the leftmost child here
@@ -500,7 +425,7 @@ void fibonacci<T> :: join( node<T>* &newRoot, node<T>* &childNode )
     }
 
     // more than 1 + 1
-    // cout << ":::::      in more than 2   ::::" << endl;
+    cout << " in more tha 2   ;;;;  " << endl;
     node<T> * firstChild = newRoot->child;
     node<T> * lastChild = firstChild->right;
 
@@ -517,186 +442,11 @@ void fibonacci<T> :: join( node<T>* &newRoot, node<T>* &childNode )
 }
 
 
-template<typename T>
-void fibonacci<T> :: increaseKey( node<T>* &nodeToIncrease, int newKey )
-{
-    if( newKey < nodeToIncrease->key )
-    {
-        cout << "new key is smaller than old key" << endl;
-        return;
-    }
-
-    if( nodeToIncrease->parent == nullptr )
-    {
-        nodeToIncrease->key = newKey;
-        if( newKey > max->key )
-        {
-            max = nodeToIncrease;
-        }
-        return;
-    }
-
-    if( newKey < nodeToIncrease->parent->key )
-    {
-        nodeToIncrease->key = newKey;
-        return;
-    }
-
-    node<T> * parent = nodeToIncrease->parent;
-
-    // cout << "in increase key" << endl;
-    // cout << parent->key << " " << nodeToIncrease->key << "   " << newKey << endl; 
-    nodeToIncrease->key = newKey;
-
-    cut( nodeToIncrease );
-    parentCut( parent );
-
-    if( newKey > max->key )
-    {
-        max = nodeToIncrease;
-    }
-}
-
-
-template<typename T>
-void fibonacci<T> :: parentCut( node<T>* &nodeToCut )
-{
-    node<T> * parent = nodeToCut->parent;
-    
-    if( parent == nullptr) return;
-
-    if( parent->marked == true )
-    {
-        cut ( nodeToCut );
-        parentCut( parent );
-    }
-    else 
-    {
-        parent->marked = true;
-    }
-}
-
-template<typename T>
-void fibonacci<T> :: cut( node<T>* &nodeToCut )
-{
-    // cout << "in cut " << endl;
-    node<T> * parent = nodeToCut->parent;
-    node<T> * nodeLeft = nodeToCut->left;
-    node<T> * nodeRight = nodeToCut->right;
-
-    node<T> * lastNode = root_list.back();
-    
-
-    if( parent->rank == 1 )
-    {
-        // cout << "caught " << endl;
-        parent->child = nullptr;
-        parent->rank = 0;
-
-        //addinng nodeTocut in root list
-
-        nodeToCut->right = lastNode->right;
-        lastNode->right->left = nodeToCut;
-
-        lastNode->right = nodeToCut;
-        nodeToCut->left = lastNode;
-
-        root_list.push_back(nodeToCut);
-        
-        // making parent null and not marking
-        nodeToCut->parent = nullptr;
-        nodeToCut->marked = false;
-        return;
-    }
-    
-    if( parent->rank > 1 && parent->child == nodeToCut )
-    {
-        // making parent's child to the next child
-        parent->child = nodeRight;
-        nodeRight->left = nodeLeft;
-        nodeLeft->right = nodeRight;
-
-        parent->rank = parent->rank-1;
-
-        //addinng nodeTocut in root list
-
-        nodeToCut->right = lastNode->right;
-        lastNode->right->left = nodeToCut;
-
-        lastNode->right = nodeToCut;
-        nodeToCut->left = lastNode;
-
-        root_list.push_back(nodeToCut);
-        
-        // making parent null and not marking
-        nodeToCut->parent = nullptr;
-        nodeToCut->marked = false;
-        return;
-
-    }
-
-    if( parent->rank > 1 && parent->child != nodeToCut )
-    {
-        nodeRight->left = nodeLeft;
-        nodeLeft->right = nodeRight;
-
-        parent->rank = parent->rank-1;
-
-        //addinng nodeTocut in root list
-
-        nodeToCut->right = lastNode->right;
-        lastNode->right->left = nodeToCut;
-
-        lastNode->right = nodeToCut;
-        nodeToCut->left = lastNode;
-
-        root_list.push_back(nodeToCut);
-        
-        // making parent null and not marking
-        nodeToCut->parent = nullptr;
-        nodeToCut->marked = false;
-        return;
-    }
-
-}
-
-
-template<typename T>
-void fibonacci<T> :: deleteNode( node<T>* &nodeToDelete )
-{
-    increaseKey( nodeToDelete, INT16_MAX );
-    extractMax();
-}
-
-template<typename T>
-void fibonacci<T> :: meld( fibonacci<T> &heapToMeld )
-{
-    node<T> * firstNode = root_list.front(); 
-    node<T> * lastNode = root_list.back();
-
-    node<T> * firstNodeToMeld = heapToMeld.root_list.front();
-    node<T> * lastNodeToMeld = heapToMeld.root_list.back();
-
-    lastNode->right = firstNodeToMeld;
-    firstNodeToMeld->left = lastNode;
-
-    firstNode->left = lastNodeToMeld;
-    lastNodeToMeld->right = firstNode;
-
-    root_list.insert(root_list.end(), heapToMeld.root_list.begin(), heapToMeld.root_list.end());    
-    totalnode = totalnode + heapToMeld.totalnode;
-}
-
-
 
 
 int main()
 {
     fibonacci<int> f;
-    fibonacci<int> g;
-
-
-
 
     f.insert(1, 1);
     f.insert(2, 2);
@@ -705,45 +455,12 @@ int main()
     f.insert(5, 5);
     f.insert(6, 6);
     f.insert(7, 7);
+    f.printRootList();
 
 
     f.extractMax();
-    f.insert(8, 8);
-    f.insert(9, 9);
-    f.insert(10, 10);
-
-    f.insert(11, 11);
-    f.insert(12, 12);
-    f.insert(13, 13);
-
-    f.extractMax();
-    f.insert(14, 14);
+    f.printRootList();
     f.printHeap();
 
-    // g.insert(100, 1);
-    // g.insert(101, 2);
-    // g.insert(102, 3);
-    // g.insert(103, 4);
-    // g.extractMax();
-    // g.printHeap();
 
-    // f.meld(g);
-
-    f.printHeap();
-    
-    //cout << f.test->key << endl;
-    //cout << f.test2->key << endl;
-
-    node<int> * temp = f.findNode( 6 );
-    cout << "Pailo re" << endl;
-    cout << temp->key << endl;
-
-    // f.increaseKey( temp , 50 );
-    // //f.increaseKey( f.test , 40 );
-
-
-    // f.printHeap();
-    // f.printRootList();
-
-    // cout << f.getmax()->key << endl;
 }
