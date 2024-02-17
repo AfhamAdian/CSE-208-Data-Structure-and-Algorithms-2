@@ -3,39 +3,22 @@
 #include <list>     
 #include <algorithm>
 #include <string>
-#include<set>
-#include<cstdlib>
-#include<ctime>
-#include<math.h>
 
-// #include <bits/stdc++.h>
+#include <bits/stdc++.h>
 
-#define MAXSTRINGS 10000
+#define MAXSTRINGS 100
 #define CUTOFF (float)(0.6)
+#define c1 37
+#define c2 59
 
 using namespace std;
 
 // all utils code 
 vector<string> randomStrings(MAXSTRINGS);
 
-
-set<int> selectRandomIndices( int size ) {
-    set<int> indices;
-    srand(1);                             // use current time as seed for random generator
-
-    while (indices.size() < size / 10) {
-        int random_index = rand() % size;
-        indices.insert(random_index);
-    }
-
-    return indices;
-}
-
-
-
 void generateRandomStrings( int n )
 {
-    srand(1); 
+    srand(time(0)); 
     int randomNumber = rand(); 
     int length;
 
@@ -75,6 +58,7 @@ int nextPrime ( int n )
 
 
 // Hash Functions
+// customHash(k, i) = (Hash(k) + C1 × i × auxHash(k) + C2 × i2) % N
 
 int auxHash( string key, int tableSize )            // slide er first Hash Function
 {
@@ -136,8 +120,7 @@ class HashTable
     int tableSize;
     int currentSize;
     vector <node*> table;
-    int probeCount;
-    int collision;
+
 
     public:
 
@@ -148,8 +131,6 @@ class HashTable
 
         currentSize = 0;
         table.resize( this->tableSize, nullptr );
-        probeCount = 0;
-        collision = 0;
 
         cout << "Table Size: " << this->tableSize << endl;
         cout << "Current Size: " << currentSize << endl;
@@ -166,24 +147,21 @@ class HashTable
         int hash1 = hashFunction1( key, tableSize );
         int hash2 = auxHash( key, tableSize );   
         int i = 0;                                                             // returns -1 if key not found
-        int index = ( hash1 + i*hash2) % tableSize;
+        int index = (hash1 + c1*i*hash2 + c2*i*i ) % tableSize;
 
         if( table[index] == nullptr )
         {
-            probeCount++;
             // cout << "fisrt index ei null" <<endl;
             return -1;
         }
         else if( table[ index ] != nullptr && table[index]->key == key && table[index]->isDeleted == false)
         {
-            probeCount++;
             return index;
         }
         else 
         {            
             while( 1 )
             {
-                probeCount++;
                 if( table[index] == nullptr ) {
                     // cout << "while er vitor null" << " " << i <<endl;
                     return -1;
@@ -192,7 +170,7 @@ class HashTable
                     return index;
                 }
                 i++;
-                index = (hash1+i*hash2) % tableSize;
+                index = ( hash1+ c1*i*hash2 + c2*i*i ) % tableSize;
             }
         }
     }
@@ -213,7 +191,7 @@ class HashTable
         int hash1 = hashFunction1( key, tableSize );
         int hash2 = auxHash( key, tableSize );
         int i = 0;
-        index = (hash1 + i*hash2) % tableSize;
+        index = (hash1 + c1*i*hash2 + c2*i*i ) % tableSize;
 
         while( 1 )
         {
@@ -233,11 +211,8 @@ class HashTable
                 if( (float)currentSize/tableSize > CUTOFF ) rehash();
                 return true;
             }
-            // else 
-
-            if( i == 0 ) collision++;
             i++;
-            index = (hash1 + i*hash2) % tableSize;
+            index = (hash1 + c1*i*hash2 + c2*i*i ) % tableSize;
         }
     
     }
@@ -282,8 +257,8 @@ class HashTable
             {
                 int hash1 = hashFunction1( table[i]->key, newTableSize );
                 int hash2 = auxHash( table[i]->key, newTableSize );
-                int j = 0;
-                int index = (hash1 + j*hash2) % newTableSize;
+                int j = 0 ;
+                int index = (hash1 + c1*j*hash2 + c2*j*j ) % newTableSize;
 
                 while( 1 )
                 {
@@ -293,7 +268,7 @@ class HashTable
                         break;
                     }
                     j++;
-                    index = (hash1 + j*hash2) % newTableSize;
+                    index = ( hash1 + c1*j*hash2 + c2*j*j ) % newTableSize;
                 }
             }
         }
@@ -312,28 +287,6 @@ class HashTable
         currentSize--;
 
         return true;
-    }
-
-    int probeCountSearch()
-    {
-        probeCount = 0;
-        set<int> random_indices = selectRandomIndices( MAXSTRINGS );
-
-        // Use random indices to select strings from randomStrings 
-        for (int index : random_indices) {
-            string key = randomStrings[index];
-            int keyIndex = findKey(key);
-            //cout << "Key of '" << key << "' is at index: " << keyIndex << endl;
-        }
-
-        int temp = probeCount;
-        probeCount = 0;
-        return temp;
-    }
-
-    int getCollison()
-    {
-        return collision;
     }
 
     void printHashTable()
@@ -371,7 +324,7 @@ int main()
 
     generateRandomStrings(MAXSTRINGS);
 
-    HashTable ht( 5000 );
+    HashTable ht( 1000 );
 
     // cout << ht.insertNode( "aaaaaa", 0 ) << endl;
     // cout << ht.findKey( "aaaaaa" ) << endl;
@@ -384,31 +337,34 @@ int main()
 
     for( int i  = 0; i<MAXSTRINGS; i++)
     {
+        // cout <<"index " << i << " " << ht.insertNode( randomStrings[i], i ) << endl;
         string temp = randomStrings[i];
-        // cout << ht.insertNode( temp , i ) << endl;
-        ht.insertNode( temp , i );
+        cout << ht.insertNode( temp , i ) << endl;
+
     }
 
     // cout << ht.findKey( "arianadilarianadil" ) << endl;    
     // cout << ht.insertNode( "arianadilarianadil", 1 ) << endl;
 
-    cout << "insertion over \n\n\n";
+    cout << "insertion over \n\n\n\n";
 
-    // for( int i = 0; i<MAXSTRINGS ; i++)
-    // {
-    //     cout << ht.removeNode( randomStrings[i] ) << endl;
-    //     ht.removeNode( randomStrings[i] );
-    // }
+    //ht.printHashTable();
+    //ht.printHashTable();
+    cout << ht.countNotNullValues();
+
+
+    for( int i = 0; i<MAXSTRINGS ; i++)
+    {
+        cout << ht.removeNode( randomStrings[i] ) << endl;
+    }
+
     cout << "Removal over" << endl;
 
-    // for( int i = 0; i<MAXSTRINGS ; i++)
-    // {
-    //     cout << ht.findKey( randomStrings[i] ) << endl;
-    //     ht.findKey( randomStrings[i] );
-    // }
+    for( int i = 0; i<MAXSTRINGS ; i++)
+    {
+        cout << ht.findKey( randomStrings[i] ) << endl;
+    }
 
-    cout << ht.probeCountSearch() << endl;
-    cout << ht.getCollison() << endl;
-
+    // cout << ht.countNotNullValues( ) << endl;
     return 0;
 }
