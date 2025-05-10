@@ -3,64 +3,7 @@
 
 int main()
 {
-   BST<int> a;
-
- 
-
-
-//    a.insert(10,"Thors");
-//    a.insert(34,"Canute");
-//    a.insert(43,"Olaf");
-//    a.insert(15,"Einer");
-//    a.insert(40,"Olmar");
-//    a.insert(53,"Floki");
-
-//     cout << a.size() << endl;
-
-//    a.insert(90,"Thorfinn");
-
-//    cout << a.clear() << endl;
-
-//    a.insert(12,"Snake");
-//    a.insert(78,"Askeladd");
-
-
-//    a.insert(10,"Thors");
-//    a.insert(34,"Canute");
-//    a.insert(43,"Olaf");
-//    a.insert(45,"Einer");
-//    a.insert(15,"Olmar");
-//    a.insert(53,"Floki");
-//    a.insert(90,"Thorfinn");
-//    a.insert(12,"Snake");
-//    a.insert(78,"Askeladd");
-//   cout << "output before deleting " << endl;
-//   a.output();
-//   cout << endl;
-//   a.insert(15,"Ymir");  
-
-//   a.deleteKey(40);
-//   a.deleteKey(78);
-//   a.deleteKey(12);
-//   a.deleteKey(43);
-
-// //   a.dele
-// //   a.deletekey()
-
-// //   a.deleteKey();
-
-
-//   cout << a.isEmpty() << endl;
-//   cout << a.clear() <<endl;
-//   cout << a.isEmpty() << endl;
-
-//    a.insert(53,"Floki");
-//    a.insert(90,"Thorfinn");
-//    a.insert(12,"Snake");
-//    a.insert(78,"Askeladd")
-
-//    a.output();
-
+    BST<int> a;
     int i = 1;
      FILE* fp1 = freopen("input.txt", "r", stdin);
      if (fp1 == NULL)
@@ -92,8 +35,8 @@ int main()
             a.insert( num, str );
             a.output();
             cout << endl;
-            // cout << a.size() << endl;
         }
+           
         else if(strcmp(check,"E") == 0 )
         {
             scanf("%d", &num);
@@ -104,14 +47,15 @@ int main()
             if( test != NULL) a.output();
             cout << endl;
         }
+           
         else if(strcmp(check,"Clr") == 0 )
         {
             cout << "\nCmd " << i << ": " << check[0] << check[1] << check[2] << endl;
             i++;
             if( a.clear() ) cout << "successful" << endl;
             else  cout << "unsuccessful" << endl;
-            // cout << a.clear() << endl;
         }
+           
         else if(strcmp(check,"F") == 0 )
         {
             scanf("%d", &num);
@@ -122,9 +66,8 @@ int main()
             if( test == NULL ) cout << num << " " << "not found" << endl;
             else cout << num << " " << "found" << endl;
 
-            // a.output();
-            // cout << endl;
         }
+           
         else if(strcmp(check,"Em") == 0 )
         {
             cout << "\nCmd " << i << ": " << check[0] << check[1] << endl;
@@ -132,22 +75,23 @@ int main()
             if( a.isEmpty() ) cout << "yes" << endl;
             else  cout << "no" << endl;
         }
+           
         else if(strcmp(check,"S") == 0 )
         {
             cout << "\nCmd " << i << ": " << check[0] << endl;
             i++;
-            // cout << check << endl;
            cout << a.size() << endl;
         }
+           
         else if ( strcmp( check,"Itr") == 0)
         {
             cout << "\nCmd " << i << ": " << check[0] << check[1] << check[2] << endl;
             i++;
             a.inorderNew();
         }
+           
         else{
             cout << "input error" << endl;
-            //a.inorderNew();
         }
     }
     return 0;
